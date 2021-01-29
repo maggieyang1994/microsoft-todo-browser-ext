@@ -8,6 +8,7 @@ function Login(props) {
   const { login, loading } = props;
   return (
     <Button
+      id="login-btn"
       size="small"
       variant="contained"
       color="primary"
