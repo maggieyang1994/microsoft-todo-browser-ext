@@ -3,6 +3,9 @@ import { SnackbarProps } from '@material-ui/core';
 import { AlertProps } from '@material-ui/lab';
 import { backgroundContext } from '../src/background';
 import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone,MessageType, EMessageType } from '../src/constants/enums';
+import { backgroundContext } from '../src/background';
+import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from '../src/constants/enums';
+import { EContentMessage } from '../src/content';
 import { ErrorCode } from '../src/helpers/error';
 
 interface ITaskBody {
@@ -36,7 +39,7 @@ interface ICreateTaskParams {
 
 interface IPopupForm {
   id?: string;
-  tasklistId?: string;
+  tasklistId: string;
   title?: string;
   describe?: string;
   dateTime?: string;
@@ -73,6 +76,11 @@ interface ITaskResult {
   recurrence: unknown;
   status: string;
   title: string;
+}
+
+interface IContentMessage {
+  type: EContentMessage;
+  payload?: any;
 }
 
 interface SerializError {

@@ -1,25 +1,30 @@
 import '../helpers/quickAdd';
 import { store } from '../redux';
-import authSlice, { asyncChunk as authSliceAsyncChunk } from '../redux/auth';
+import messageSlice from '../redux/message'
+import authSlice, { acquireTokenSilent, asyncChunk as authSliceAsyncChunk } from '../redux/auth';
 import popupSlice from '../redux/popup';
 import taskSlice, { asyncChunk as taskSlickAsyncChunk } from '../redux/task';
 import tasklistSlice, { asyncChunk as tasklistAsyncChunk } from '../redux/tasklist';
-import messageSlice from '../redux/message'
 import Notify from '../helpers/notification';
 import report from '../helpers/report';
 import { Page } from '../constants/enums';
+import { logout } from '../helpers/msal';
 
 report(Page.BACKGROUND);
 
-export const backgroundContext = {
+const backgroundContext = {
   Notify,
   store,
   authSlice: authSlice as typeof authSlice & typeof authSliceAsyncChunk,
   taskSlice: taskSlice as typeof taskSlice & typeof taskSlickAsyncChunk,
   tasklistSlice: tasklistSlice as typeof tasklistSlice & typeof tasklistAsyncChunk,
   popupSlice: popupSlice as typeof popupSlice,
-  messageSlice: messageSlice as typeof messageSlice
+  messageSlice: messageSlice as typeof messageSlice,
+  logout,
 };
+
 // eslint-disable-next-line
 // @ts-ignore
 window.backgroundContext = backgroundContext;
+
+store.dispatch(acquireTokenSilent());

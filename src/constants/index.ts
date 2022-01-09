@@ -22,7 +22,6 @@ export const REPORT_SAMPLE_RATE = 1;
 export const NOTIFICATION_ICON_URL = `chrome-extension://${EXT_ID}/icons/todo-128.png`;
 export const NOTIFICATION_TYPE = 'basic';
 
-
 export const AUTO_RESET_POPUP_FORM = true;
 export const DEFAULT_FORM_VALS: IPopupForm = {
   title: '',
@@ -49,3 +48,4 @@ export const DEFAULT_MESSAGE_VALS: IMessage = {
 
 
 export const ENABLE_QUICK_ADD = true;
+export const ENABLE_LOG = IS_DEV;

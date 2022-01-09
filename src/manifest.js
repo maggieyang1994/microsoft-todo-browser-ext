@@ -4,7 +4,7 @@ const packageJson = require('../package.json');
 module.exports = (env) => ({
   manifest_version: 2,
   name: 'Microsoft To Do browser extension',
-  default_locale: 'zh_CN',
+  default_locale: 'en',
   version: packageJson.version,
   description: packageJson.description,
   permissions: ['identity', 'tabs', 'contextMenus', 'notifications', 'storage'],
@@ -16,12 +16,12 @@ module.exports = (env) => ({
   browser_action: {
     default_popup: 'popup.html',
   },
-  // content_scripts: [
-  //   {
-  //     matches: ['<all_urls>'],
-  //     js: ['content.js'],
-  //   },
-  // ],
+  content_scripts: [
+    {
+      matches: ['<all_urls>'],
+      js: ['content.js'],
+    },
+  ],
   icons:
     env.NODE_ENV === 'development'
       ? { 128: './icons/todo-dev-128.png' }

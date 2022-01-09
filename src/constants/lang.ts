@@ -12,7 +12,8 @@ export const LANG_POPUP_TASKLIST_VALIDATION = getI18nText('popupTaskListValidati
 export const LANG_POPUP_IMPORTANCE_TOOLTIP = getI18nText('popupImportanceTooltip');
 export const LANG_POPUP_BOOKMARK_TOOLTIP = getI18nText('popupBookmarkTooltip');
 
+export const NOTIFY_TITLE = getI18nText('notifyTitle');
 export const LANG_POPUP_LOADING_TEXT = getI18nText('popupLoadingText');
 export const LANG_POPUP_LOGIN_TEXT = getI18nText('popupLoginText');
 
-export const NOTIFY_TITLE = getI18nText('notifyTitle');
+export const LNAG_UNTITLE = getI18nText('untitle');

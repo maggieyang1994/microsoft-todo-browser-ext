@@ -1,10 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Dispatch, State } from '../../../redux';
 import { Controller, useForm } from 'react-hook-form';
-import { IPopupForm } from '../../../../types';
-import { backgroundContext } from '../../../popup';
-import { DEFAULT_FORM_VALS } from '../../../constants';
 import { logger } from '../../../helpers/logger';
 
 import InputLabel from '@material-ui/core/InputLabel';
@@ -22,7 +19,8 @@ import Star from '@material-ui/icons/Star';
 import StarOutline from '@material-ui/icons/StarOutline';
 import Bookmarks from '@material-ui/icons/Bookmarks';
 import RotateLeft from '@material-ui/icons/RotateLeft';
-import { FormHelperText, Tooltip } from '@material-ui/core';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Tooltip from '@material-ui/core/Tooltip';
 import {
   LANG_POPUP_TITLE,
   LANG_POPUP_DESCRIBE,
@@ -34,66 +32,65 @@ import {
   LANG_POPUP_RESET,
   LANG_POPUP_CREATING,
   LANG_POPUP_ADDTASK,
+  LANG_POPUP_TITLE_VALIDATION,
 } from '../../../constants/lang';
-import { openMicrosoftTodo } from '../../../helpers';
-import { NotifyType } from '../../../constants/enums';
+import { backgroundContext } from '../..';
 
-const { tasklistSlice, taskSlice, messageSlice } = backgroundContext;
+const { tasklistSlice, taskSlice, popupSlice } = backgroundContext;
 
-type TaskFormProps = {
-  defaultValues: IPopupForm;
-  onChange: (val: IPopupForm) => void;
-};
-
-const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => {
+const TaskForm: React.FC = () => {
   const dispatch = useDispatch<Dispatch>();
+  const store = useStore<State>();
+
+  // loading 状态
+  const creating = useSelector((state: State) => state.popup.creating);
+  const loadingTasklist = useSelector((state: State) => state.popup.loadingTasklist);
+
+  // 获取表单初始状态（仅首次渲染时获取）
+  const defaultValues = useMemo(() => store.getState().popup.form, []);
   const {
     watch,
     reset,
     control,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues });
 
-  // getTasklist
+  // form 变化时更新 redux
+  useEffect(() => {
+    watch((val) => dispatch(popupSlice.actions.updateForm(val)));
+  }, []);
+
+  // 获取 tasklist
   const tasklists = useSelector((state: State) => state.tasklist.lists);
   useEffect(() => {
-    logger.log('mounted getTasklist');
     dispatch(tasklistSlice.getTasklist());
   }, []);
 
-  // init onChange
+  // 更新 tasklistId
+  const tasklistId = useSelector((state: State) => state.popup.form.tasklistId);
   useEffect(() => {
-    logger.log('mounted init onChange');
-    watch(onChange);
+    setValue('tasklistId', tasklistId);
+  }, [tasklistId]);
+
+  // 重置表单
+  const handleReset = useCallback(() => {
+    dispatch(popupSlice.actions.resetForm());
+    reset(store.getState().popup.form);
   }, []);
 
-  // loading stats
-  const creating = useSelector((state: State) => state.popup.creating);
-  const loadingTasklist = useSelector((state: State) => state.popup.loadingTasklist);
-
-  // submit
+  // 提交表单
   const submit = useCallback((val, err) => {
     logger.log('submit', val, err);
     dispatch(taskSlice.createTask(val))
-      .then(res => {
-        // @ts-ignore
-        dispatch(messageSlice.actions.showMessage({ content: 'balabala', options: { link: { linkContent: 'link', callback: () => openMicrosoftTodo(NotifyType.TASK, res.payload.id) } } }))
-      });
-
+    // @ts-ignore
+    .then(res => {
+      // @ts-ignore
+      dispatch(messageSlice.actions.showMessage({ content: 'balabala', options: { link: { linkContent: 'link', callback: () => openMicrosoftTodo(NotifyType.TASK, res.payload.id) } } }))
+    })
+    .then(handleReset)
   }, []);
-
-  // reset
-  const handleReset = useCallback(() => {
-    logger.log('handleReset reset form');
-    reset({ ...DEFAULT_FORM_VALS });
-  }, [reset]);
-
-  // reset on defaultValues change
-  useEffect(() => {
-    logger.log('reset form on defaultValues change');
-    reset(defaultValues);
-  }, [defaultValues]);
 
   return (
     <Grid container direction="column" spacing={2}>
@@ -108,7 +105,7 @@ const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => 
               fullWidth
               autoFocus
               required
-              helperText={errors.title && 'Title is required.'}
+              helperText={errors.title && LANG_POPUP_TITLE_VALIDATION}
               error={Boolean(errors.title)}
               {...field}
             />

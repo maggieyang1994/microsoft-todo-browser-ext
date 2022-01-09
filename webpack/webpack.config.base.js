@@ -11,8 +11,8 @@ module.exports = (env) => ({
   entry: {
     background: './src/background/index.ts',
     popup: './src/popup/index.tsx',
+    content: './src/content/index.ts',
     // options: './src/options.tsx',
-    // content: './src/content.js',
   },
 
   output: {
@@ -30,6 +30,7 @@ module.exports = (env) => ({
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
+        sideEffects: true,
       },
     ],
   },
@@ -41,7 +42,9 @@ module.exports = (env) => ({
     /**
      * parse .env file
      */
-    new Dotenv(),
+    new Dotenv({
+      path: path.resolve(`./.env.${env.NODE_ENV}`)
+    }),
 
     new HtmlWebpackPlugin({
       filename: 'popup.html',
@@ -74,6 +77,8 @@ module.exports = (env) => ({
   ],
 
   optimization: {
+    usedExports: true,
+
     splitChunks: {
       chunks: 'async',
       minSize: 20000,
