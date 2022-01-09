@@ -7,6 +7,7 @@ import { logger } from '../../helpers/logger';
 import Login from './components/Login';
 import { Container } from '@material-ui/core';
 import OpenMSTodo from './components/OpenMSToDo';
+import Message from './components/Message';
 
 const Default: React.FC<void> = () => {
   useEffect(() => {
@@ -27,6 +28,7 @@ const Default: React.FC<void> = () => {
   return (
     <Container style={{ width: 350, padding: 10 }}>
       <OpenMSTodo />
+      <Message />
       {/* <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> */}
       {authed ? <TaskForm defaultValues={reduxForm} onChange={handleFormChange} /> : <Login />}
     </Container>

@@ -1,4 +1,4 @@
-import { IPopupForm } from '../../types';
+import { IPopupForm, IMessage } from '../../types';
 import { TimeZone } from './enums';
 
 export const EXT_ID = chrome.runtime.id;
@@ -22,6 +22,7 @@ export const REPORT_SAMPLE_RATE = 1;
 export const NOTIFICATION_ICON_URL = `chrome-extension://${EXT_ID}/icons/todo-128.png`;
 export const NOTIFICATION_TYPE = 'basic';
 
+
 export const AUTO_RESET_POPUP_FORM = true;
 export const DEFAULT_FORM_VALS: IPopupForm = {
   title: '',
@@ -31,5 +32,20 @@ export const DEFAULT_FORM_VALS: IPopupForm = {
   bookmark: true,
   dateTime: '',
 };
+
+export const DEFAULT_MESSAGE_VALS: IMessage = {
+  content: '',
+  options: {
+    snackbar: {
+      open: false,
+      anchorOrigin: {vertical: 'top', horizontal: 'center'},
+      autoHideDuration: 2000
+    },
+    alert: {
+      severity: 'info'
+    },
+  }
+};
+
 
 export const ENABLE_QUICK_ADD = true;

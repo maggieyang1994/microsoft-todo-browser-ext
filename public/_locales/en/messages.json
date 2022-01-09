@@ -50,5 +50,9 @@
   "popupLoginText": {
     "message": "Login",
     "description": ""
+  },
+  "notifyTitle": {
+    "message": "Add a task success",
+    "description": "Add a task success"
   }
 }

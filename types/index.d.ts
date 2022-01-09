@@ -1,6 +1,8 @@
 import { AuthenticationResult } from '@azure/msal-browser';
+import { SnackbarProps } from '@material-ui/core';
+import { AlertProps } from '@material-ui/lab';
 import { backgroundContext } from '../src/background';
-import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone } from '../src/constants/enums';
+import { ETaskContentTypes, ETaskImportance, ETaskStatus, TimeZone,MessageType, EMessageType } from '../src/constants/enums';
 import { ErrorCode } from '../src/helpers/error';
 
 interface ITaskBody {
@@ -78,6 +80,25 @@ interface SerializError {
   message: string;
   stack: string;
   time: number;
+}
+
+interface IMessage{
+  content: string,
+  options?: MessageOption
+}
+
+interface MessageOption{
+  snackbar?: SnackbarProps,
+  alert?: AlertProps,
+  link?: {
+    linkContent: string,
+    callback: () => void
+  }
+}
+
+export interface SnackbarOrigin {
+  vertical: 'top' | 'bottom';
+  horizontal: 'left' | 'center' | 'right';
 }
 
 type Modify<T, R> = Omit<T, keyof R> & R;

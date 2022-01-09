@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { State } from '../../../redux';
+import { Dispatch, State } from '../../../redux';
 import { Controller, useForm } from 'react-hook-form';
 import { IPopupForm } from '../../../../types';
 import { backgroundContext } from '../../../popup';
@@ -35,8 +35,10 @@ import {
   LANG_POPUP_CREATING,
   LANG_POPUP_ADDTASK,
 } from '../../../constants/lang';
+import { openMicrosoftTodo } from '../../../helpers';
+import { NotifyType } from '../../../constants/enums';
 
-const { tasklistSlice, taskSlice } = backgroundContext;
+const { tasklistSlice, taskSlice, messageSlice } = backgroundContext;
 
 type TaskFormProps = {
   defaultValues: IPopupForm;
@@ -44,7 +46,7 @@ type TaskFormProps = {
 };
 
 const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<Dispatch>();
   const {
     watch,
     reset,
@@ -73,7 +75,12 @@ const TaskForm: React.FC<any> = ({ defaultValues, onChange }: TaskFormProps) => 
   // submit
   const submit = useCallback((val, err) => {
     logger.log('submit', val, err);
-    dispatch(taskSlice.createTask(val));
+    dispatch(taskSlice.createTask(val))
+      .then(res => {
+        // @ts-ignore
+        dispatch(messageSlice.actions.showMessage({ content: 'balabala', options: { link: { linkContent: 'link', callback: () => openMicrosoftTodo(NotifyType.TASK, res.payload.id) } } }))
+      });
+
   }, []);
 
   // reset

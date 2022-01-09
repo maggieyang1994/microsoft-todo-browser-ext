@@ -4,6 +4,7 @@ import { createLogger } from 'redux-logger';
 import taskSlice from './task';
 import tasklistSlice from './tasklist';
 import popupSlice from './popup';
+import messageSlice from './message';
 import { IS_DEV } from '../constants';
 
 export const store = configureStore({
@@ -14,6 +15,7 @@ export const store = configureStore({
     task: taskSlice.reducer,
     tasklist: tasklistSlice.reducer,
     popup: popupSlice.reducer,
+    message: messageSlice.reducer
   },
 
   middleware: (getDefaultMiddleware) => {
